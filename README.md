@@ -31,6 +31,34 @@
 $ npm install
 ```
 
+## Basic Command Development
+
+```bash
+$ npm install
+$ npm run start:dev
+
+```
+
+```bash
+$ npm install
+$ npm i --save class-validator class-transformer
+$ npm i --save @nestjs/mapped-types
+$ npm i --save @nestjs/swagger
+$ npm i --save @nestjs/config
+$ npm i --save @nestjs/jwt
+$ npm install --save @nestjs/typeorm typeorm mysql2
+```
+
+## Create Controller, Service, DTO, Interface, Module
+
+```bash
+$ nest g co article article --flat
+$ nest g s article article --flat
+$ nest g dto article article --flat
+$ nest g interface article article --flat
+$ nest g mo article article --flat
+```
+
 ## Compile and run the project
 
 ```bash

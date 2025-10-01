@@ -1,26 +1,59 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { ArticleService } from './article.service';
+import { CreateArticleDto } from './dto/create-article.dto';
+import * as articleInterface from './interface/article.interface';
+import { FindOneParams } from './dto/find-one.params';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Controller('article')
 export class ArticleController {
+  constructor(private readonly articleService: ArticleService) {}
   @Get()
-  findAll(): string {
-    return 'This action returns all article';
+  findAll(): articleInterface.IArticle[] {
+    return this.articleService.findAllArticle();
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string): string {
-    return `This action returns a #${id} article`;
+  findOne(@Param() params: FindOneParams): articleInterface.IArticle {
+    return this.findOneOrFail(params.id);
   }
   @Post()
-  create(): string {
-    return 'This action adds a new article';
+  create(
+    @Body() createArticleDto: CreateArticleDto,
+  ): articleInterface.IArticle {
+    return this.articleService.createArticle(createArticleDto);
   }
   @Put('/:id')
-  update(@Param('id') id: string): string {
-    return `This action updates a #${id} article`;
+  update(
+    @Param() params: FindOneParams,
+    @Body() updateArticleDto: UpdateArticleDto,
+  ): articleInterface.IArticle {
+    const article = this.findOneOrFail(params.id);
+    return this.articleService.updateArticleByParams(article, updateArticleDto);
   }
   @Delete('/:id')
-  delete(@Param('id') id: string): string {
-    return `This action removes a #${id} article`;
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param() params: FindOneParams): void {
+    const article = this.findOneOrFail(params.id);
+    this.articleService.deleteArticleByParams(article);
+  }
+
+  private findOneOrFail(id: string): articleInterface.IArticle {
+    const article = this.articleService.findOneByParams(id);
+    if (!article) {
+      throw new NotFoundException();
+    }
+    return article;
   }
 }

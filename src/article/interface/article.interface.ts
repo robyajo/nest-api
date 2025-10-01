@@ -1,5 +1,5 @@
-export interface Article {
-  id: number;
+export interface IArticle {
+  id: string;
   title: string;
   content: string;
   status: ArticleStatus;
